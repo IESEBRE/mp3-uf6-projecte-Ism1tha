@@ -1,3 +1,5 @@
+package main.java;
+
 import com.insebre.project.controller.ExceptionController;
 import com.insebre.project.exception.CustomException;
 
