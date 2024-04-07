@@ -8,4 +8,5 @@ public class ExceptionController {
         // Some logic that may throw the custom exception
         throw new CustomException("This is a custom exception message.");
     }
+
 }
