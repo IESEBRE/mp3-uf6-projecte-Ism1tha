@@ -1,6 +1,6 @@
 package com.insebre.project.model;
 
-public class Programa {
+public class Program {
 
     private String name;
     private String description;
@@ -9,7 +9,7 @@ public class Programa {
     private String version;
     private String releaseDate;
 
-    public Programa(String name, String description, String category, String language, String version, String releaseDate) {
+    public Program(String name, String description, String category, String language, String version, String releaseDate) {
         this.name = name;
         this.description = description;
         this.category = category;

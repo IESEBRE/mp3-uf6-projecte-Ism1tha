@@ -1,6 +1,6 @@
     package com.insebre.project.controller;
 
-    import com.insebre.project.model.Programa;
+    import com.insebre.project.model.Program;
 
     import javax.swing.*;
     import java.io.*;
@@ -10,8 +10,8 @@
         public static final int MAX_PROGRAMS = 200;
 
         /* Program Data */
-        public static Programa[] dadesApp = new Programa[MAX_PROGRAMS];
-        public static int dadesAppIndex = 0;
+        public static Program[] appData = new Program[MAX_PROGRAMS];
+        public static int appDataIndex = 0;
 
         public static void loadData(){
             try{
@@ -20,9 +20,9 @@
                 BufferedInputStream bis = new BufferedInputStream(fis);
                 ObjectInputStream ois = new ObjectInputStream(bis);
                 while(true) {
-                    Programa item = (Programa) ois.readObject();
-                    dadesApp[dadesAppIndex] = item;
-                    dadesAppIndex++;
+                    Program item = (Program) ois.readObject();
+                    appData[appDataIndex] = item;
+                    appDataIndex++;
                 }
             }catch (NullPointerException | FileNotFoundException ex){
                 String dataFile = System.getProperty("user.dir") + "/programs.dat";
@@ -68,7 +68,7 @@
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 ObjectOutputStream oos = new ObjectOutputStream(bos);
                 for(int i = 0; i < MAX_PROGRAMS; i++) {
-                    if(dadesApp[i] != null ) oos.writeObject(dadesApp[i]);
+                    if(appData[i] != null ) oos.writeObject(appData[i]);
                 }
                 oos.close();
                 bos.close();
@@ -86,42 +86,42 @@
             }
         }
 
-        public static Programa[] getData() { return dadesApp; }
+        public static Program[] getData() { return appData; }
 
-        public static void setData(Programa[] newData) {
-            dadesApp = newData;
+        public static void setData(Program[] newData) {
+            appData = newData;
         }
 
         public static void addDummyData () {
-            Programa[] programas = new Programa[3];
-            programas[0] = new Programa("Program 1", "Description 1", "Category 1", "Language 1", "1.0", "2021-01-01");
-            programas[1] = new Programa("Program 2", "Description 2", "Category 2", "Language 2", "2.0", "2021-02-02");
-            programas[2] = new Programa("Program 3", "Description 3", "Category 3", "Language 3", "3.0", "2021-03-03");
-            setData(programas);
+            Program[] programs = new Program[3];
+            programs[0] = new Program("Program 1", "Description 1", "Category 1", "Language 1", "1.0", "2021-01-01");
+            programs[1] = new Program("Program 2", "Description 2", "Category 2", "Language 2", "2.0", "2021-02-02");
+            programs[2] = new Program("Program 3", "Description 3", "Category 3", "Language 3", "3.0", "2021-03-03");
+            setData(programs);
         }
 
         public static void relocateDataObjects(){
-            Programa[] dadesAppTmp = new Programa[MAX_PROGRAMS];
+            Program[] dadesAppTmp = new Program[MAX_PROGRAMS];
             int tmpIndex = 0;
             for(int i = 0; i < MAX_PROGRAMS; i++){
-                if(dadesApp[i] != null){
-                    dadesAppTmp[tmpIndex] = dadesApp[i];
+                if(appData[i] != null){
+                    dadesAppTmp[tmpIndex] = appData[i];
                     tmpIndex++;
                 }
             }
-            dadesApp = dadesAppTmp;
+            appData = dadesAppTmp;
         }
 
         public static Object[][] getParsedPrograms() {
-            Programa[] programas = DataController.getData();
-            Object[][] parsedPrograms = new Object[programas.length][6];
-            for (int i = 0; i < programas.length; i++) {
-                parsedPrograms[i][0] = programas[i].getName();
-                parsedPrograms[i][1] = programas[i].getDescription();
-                parsedPrograms[i][2] = programas[i].getCategory();
-                parsedPrograms[i][3] = programas[i].getLanguage();
-                parsedPrograms[i][4] = programas[i].getVersion();
-                parsedPrograms[i][5] = programas[i].getReleaseDate();
+            Program[] programs = DataController.getData();
+            Object[][] parsedPrograms = new Object[programs.length][6];
+            for (int i = 0; i < programs.length; i++) {
+                parsedPrograms[i][0] = programs[i].getName();
+                parsedPrograms[i][1] = programs[i].getDescription();
+                parsedPrograms[i][2] = programs[i].getCategory();
+                parsedPrograms[i][3] = programs[i].getLanguage();
+                parsedPrograms[i][4] = programs[i].getVersion();
+                parsedPrograms[i][5] = programs[i].getReleaseDate();
             }
             return parsedPrograms;
         }
