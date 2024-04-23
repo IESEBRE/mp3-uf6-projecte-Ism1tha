@@ -19,10 +19,16 @@ public class Form1 {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        throw new IllegalArgumentException("Unknown test exception.");
     }
 
     public void setTableData(Object[][] data) {
-        DefaultTableModel model = new DefaultTableModel(data, new String[]{"Name", "Description", "Category", "Language", "Version", "Release Date"});
+        DefaultTableModel model = new DefaultTableModel(data, new String[]{"Name", "Description", "Category", "Language", "Version", "Release Date"}) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         table1.setModel(model);
     }
 }

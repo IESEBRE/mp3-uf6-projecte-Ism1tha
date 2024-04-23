@@ -6,9 +6,13 @@ import com.insebre.project.view.Form1;
 public class AppController {
 
     public void run() {
-        DataController.loadData();
-        DataController.addDummyData();
-        openForm1();
+        try {
+            DataController.loadData();
+            DataController.addDummyData();
+            openForm1();
+        } catch (Exception e) {
+            ExceptionController.handleException(e);
+        }
     }
 
     public int getCurrentProgramIndex() {

@@ -1,5 +1,8 @@
 package com.insebre.project.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Program {
 
     private String name;
@@ -8,6 +11,9 @@ public class Program {
     private String language;
     private String version;
     private String releaseDate;
+
+    /* Collection of commits using generics */
+    private final List<Commit> commits = new ArrayList<Commit>();
 
     public Program(String name, String description, String category, String language, String version, String releaseDate) {
         this.name = name;

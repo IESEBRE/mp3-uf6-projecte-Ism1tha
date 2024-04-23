@@ -1,5 +1,8 @@
     package com.insebre.project.controller;
 
+    import com.insebre.project.exception.FileCorruptDataException;
+    import com.insebre.project.exception.FileDataGenerateErrorException;
+    import com.insebre.project.exception.FileNullOnSaveException;
     import com.insebre.project.model.Program;
 
     import javax.swing.*;
@@ -34,10 +37,7 @@
                             "Información",
                             JOptionPane.INFORMATION_MESSAGE);
                 } catch(IOException e) {
-                    JOptionPane.showMessageDialog(null,
-                            "Se ha producido un error al generar el archivo de datos.",
-                            "Error",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    ExceptionController.handleException(new FileDataGenerateErrorException());
                 }
             }
             catch (EOFException ex){
@@ -47,10 +47,7 @@
                         JOptionPane.INFORMATION_MESSAGE);
             }
             catch (ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(null,
-                        "El archivo de datos parece estar corrupto.",
-                        "Error",
-                        JOptionPane.INFORMATION_MESSAGE);
+                ExceptionController.handleException(new FileCorruptDataException());
             }
             catch (IOException ex) {
                 JOptionPane.showMessageDialog(null,
@@ -61,7 +58,7 @@
             System.out.println("Data loaded successfully.");
         }
 
-        public static void saveData(){
+        public static void saveData() {
             try{
                 File data = new File(System.getProperty("user.dir"), "programs.dat");
                 FileOutputStream fos = new FileOutputStream(data);
@@ -74,15 +71,9 @@
                 bos.close();
                 fos.close();
             } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(null,
-                        "No se ha encontrado el archivo de datos al guardar.",
-                        "Error",
-                        JOptionPane.INFORMATION_MESSAGE);
+                ExceptionController.handleException(new FileNullOnSaveException());
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null,
-                        ex,
-                        "Error",
-                        JOptionPane.INFORMATION_MESSAGE);
+                ExceptionController.handleException(ex);
             }
         }
 
@@ -101,15 +92,15 @@
         }
 
         public static void relocateDataObjects(){
-            Program[] dadesAppTmp = new Program[MAX_PROGRAMS];
+            Program[] appDataTmp = new Program[MAX_PROGRAMS];
             int tmpIndex = 0;
             for(int i = 0; i < MAX_PROGRAMS; i++){
                 if(appData[i] != null){
-                    dadesAppTmp[tmpIndex] = appData[i];
+                    appDataTmp[tmpIndex] = appData[i];
                     tmpIndex++;
                 }
             }
-            appData = dadesAppTmp;
+            appData = appDataTmp;
         }
 
         public static Object[][] getParsedPrograms() {
