@@ -1,7 +1,7 @@
 package com.insebre.project.controller;
 
 import com.insebre.project.Main;
-import com.insebre.project.view.Form1;
+import com.insebre.project.view.MainForm;
 
 public class AppController {
 
@@ -20,10 +20,12 @@ public class AppController {
     }
 
     public void openForm1() {
-        Form1 form1 = new Form1();
-        form1.setTableData(DataController.getParsedPrograms());
-        form1.show();
+        MainForm mainForm = new MainForm();
+        mainForm.setTableData(DataController.getParsedPrograms());
+        mainForm.show();
     }
+
+
 
 
 }
