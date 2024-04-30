@@ -3,6 +3,7 @@ package com.insebre.project.controller;
 import com.insebre.project.exception.FileCorruptDataException;
 import com.insebre.project.exception.FileDataGenerateErrorException;
 import com.insebre.project.exception.FileNullOnSaveException;
+import com.insebre.project.exception.InvalidPasswordException;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class ExceptionController {
         exceptionMessages.put(FileNullOnSaveException.class, "No file was found to save the data.");
         exceptionMessages.put(FileCorruptDataException.class, "The file data is corrupt.");
         exceptionMessages.put(FileDataGenerateErrorException.class, "An error occurred while generating the file data.");
+        exceptionMessages.put(InvalidPasswordException.class, "Forbidden access. Invalid password.");
     }
 
     public static void handleException(Exception ex) {
@@ -28,6 +30,10 @@ public class ExceptionController {
             errorMessage = "An unexpected error occurred: " + ex.getMessage();
         }
         JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void ThrowException(Exception ex) throws Exception {
+        throw ex;
     }
 
 }

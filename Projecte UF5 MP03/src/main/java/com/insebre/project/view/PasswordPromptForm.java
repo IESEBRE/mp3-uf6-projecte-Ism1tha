@@ -27,14 +27,11 @@ public class PasswordPromptForm extends JFrame{
             }
         });
     }
-
-    private void closeForm() {
-        // Perform any cleanup actions before closing the form
-        dispose(); // Close the form
-
+    public void closeForm() {
+        dispose();
     }
 
-    private void setPasswordSubmittedSuccessfully(boolean submittedSuccessfully) {
+    public void setPasswordSubmittedSuccessfully(boolean submittedSuccessfully) {
         this.isPasswordSubmittedSuccessfully = submittedSuccessfully;
     }
 
