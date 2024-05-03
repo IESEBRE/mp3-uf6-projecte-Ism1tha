@@ -7,8 +7,8 @@
     <properties>
       <font swing-font="Label.font"/>
       <inheritsPopupMenu value="false"/>
-      <minimumSize width="1024" height="512"/>
-      <preferredSize width="1024" height="512"/>
+      <minimumSize width="756" height="300"/>
+      <preferredSize width="756" height="300"/>
       <requestFocusEnabled value="true"/>
     </properties>
     <border type="none"/>

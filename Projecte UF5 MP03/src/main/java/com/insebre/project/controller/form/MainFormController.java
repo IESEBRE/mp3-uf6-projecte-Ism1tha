@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class MainFormController {
+
     private final MainForm mainForm;
 
     public MainFormController(MainForm mainForm) {
@@ -60,6 +61,10 @@ public class MainFormController {
         frame.setVisible(true);
         mainForm.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         throw new IllegalArgumentException("Unknown test exception.");
+    }
+
+    public void hide() {
+        mainForm.getPanel().setVisible(false);
     }
 
     public void setTableData(Object[][] data) {

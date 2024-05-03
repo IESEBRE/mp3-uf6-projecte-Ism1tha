@@ -2,11 +2,15 @@ package com.insebre.project.controller;
 
 import com.insebre.project.Main;
 import com.insebre.project.controller.form.MainFormController;
+import com.insebre.project.model.Program;
 import com.insebre.project.view.MainForm;
 
 import java.util.Locale;
 
 public class AppController {
+
+    MainForm mainFormInstance;
+    MainFormController mainFormController;
 
     public void run() {
         try {
@@ -20,10 +24,14 @@ public class AppController {
     }
 
     public void openMainForm() {
-        MainForm mainForm = new MainForm();
-        MainFormController mainFormController = new MainFormController(mainForm);
+        this.mainFormInstance = new MainForm();
+        this.mainFormController = new MainFormController(this.mainFormInstance);
         mainFormController.setTableData(DataController.getParsedPrograms());
         mainFormController.show();
+    }
+
+    public void hideMainForm() {
+        mainFormController.hide();
     }
 
     public int getCurrentProgramIndex() {

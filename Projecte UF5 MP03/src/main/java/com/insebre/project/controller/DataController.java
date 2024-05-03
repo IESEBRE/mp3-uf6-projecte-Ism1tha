@@ -91,7 +91,7 @@
             setData(programs);
         }
 
-        public static void relocateDataObjects(){
+        public static void realocateDataObjects(){
             Program[] appDataTmp = new Program[MAX_PROGRAMS];
             int tmpIndex = 0;
             for(int i = 0; i < MAX_PROGRAMS; i++){

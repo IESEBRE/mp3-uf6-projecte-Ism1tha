@@ -1,9 +1,6 @@
 package com.insebre.project.controller;
 
-import com.insebre.project.exception.FileCorruptDataException;
-import com.insebre.project.exception.FileDataGenerateErrorException;
-import com.insebre.project.exception.FileNullOnSaveException;
-import com.insebre.project.exception.InvalidPasswordException;
+import com.insebre.project.exception.*;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -22,6 +19,7 @@ public class ExceptionController {
         exceptionMessages.put(FileCorruptDataException.class, "The file data is corrupt.");
         exceptionMessages.put(FileDataGenerateErrorException.class, "An error occurred while generating the file data.");
         exceptionMessages.put(InvalidPasswordException.class, "Forbidden access. Invalid password.");
+        exceptionMessages.put(EmptyFieldFoundException.class, "An empty field was found. Please fill all fields.");
     }
 
     public static void handleException(Exception ex) {
