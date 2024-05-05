@@ -64,15 +64,21 @@
                 FileOutputStream fos = new FileOutputStream(data);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 ObjectOutputStream oos = new ObjectOutputStream(bos);
-                for(int i = 0; i < MAX_PROGRAMS; i++) {
-                    if(appData[i] != null ) oos.writeObject(appData[i]);
+                for(int i = 0; i < appDataIndex; i++) {
+                    if(appData[i] != null ) {
+                        System.out.println("Saving program: " + i);
+                        oos.writeObject(appData[i]);
+                    }
+                    System.out.println("Program saved: " + i);
                 }
                 oos.close();
                 bos.close();
                 fos.close();
             } catch (FileNotFoundException ex) {
+                System.out.println("A");
                 ExceptionController.handleException(new FileNullOnSaveException());
             } catch (IOException ex) {
+                System.out.println("B");
                 ExceptionController.handleException(ex);
             }
         }
@@ -81,14 +87,6 @@
 
         public static void setData(Program[] newData) {
             appData = newData;
-        }
-
-        public static void addDummyData () {
-            Program[] programs = new Program[3];
-            programs[0] = new Program("Program 1", "Description 1", "Category 1", "Language 1", "1.0", "2021-01-01");
-            programs[1] = new Program("Program 2", "Description 2", "Category 2", "Language 2", "2.0", "2021-02-02");
-            programs[2] = new Program("Program 3", "Description 3", "Category 3", "Language 3", "3.0", "2021-03-03");
-            setData(programs);
         }
 
         public static void realocateDataObjects(){
@@ -105,8 +103,8 @@
 
         public static Object[][] getParsedPrograms() {
             Program[] programs = DataController.getData();
-            Object[][] parsedPrograms = new Object[programs.length][6];
-            for (int i = 0; i < programs.length; i++) {
+            Object[][] parsedPrograms = new Object[appDataIndex][6];
+            for (int i = 0; i < appDataIndex; i++) {
                 parsedPrograms[i][0] = programs[i].getName();
                 parsedPrograms[i][1] = programs[i].getDescription();
                 parsedPrograms[i][2] = programs[i].getCategory();
@@ -116,5 +114,4 @@
             }
             return parsedPrograms;
         }
-
     }

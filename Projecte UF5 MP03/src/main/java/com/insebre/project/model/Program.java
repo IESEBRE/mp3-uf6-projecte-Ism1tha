@@ -1,9 +1,10 @@
 package com.insebre.project.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Program {
+public class Program implements Serializable {
 
     private String name;
     private String description;

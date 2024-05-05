@@ -9,29 +9,31 @@ import java.util.Locale;
 
 public class AppController {
 
-    MainForm mainFormInstance;
-    MainFormController mainFormController;
+    static MainForm mainFormInstance;
+    static MainFormController mainFormController;
+
+    public static boolean showingAddProgramForm = false;
+    public static boolean showingEditProgramForm = false;
 
     public void run() {
         try {
             Locale.setDefault(new Locale("ca","ES"));
             DataController.loadData();
-            DataController.addDummyData();
             openMainForm();
         } catch (Exception e) {
             ExceptionController.handleException(e);
         }
     }
 
-    public void openMainForm() {
-        this.mainFormInstance = new MainForm();
-        this.mainFormController = new MainFormController(this.mainFormInstance);
+    public static void openMainForm() {
+        mainFormInstance = new MainForm();
+        mainFormController = new MainFormController(mainFormInstance);
         mainFormController.setTableData(DataController.getParsedPrograms());
         mainFormController.show();
     }
 
-    public void hideMainForm() {
-        mainFormController.hide();
+    public static void refreshMainForm() {
+        mainFormController.setTableData(DataController.getParsedPrograms());
     }
 
     public int getCurrentProgramIndex() {

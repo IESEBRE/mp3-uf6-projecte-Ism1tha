@@ -1,8 +1,12 @@
 package com.insebre.project.controller.form;
 
+import com.insebre.project.controller.AppController;
+import com.insebre.project.controller.DataController;
 import com.insebre.project.controller.ExceptionController;
+import com.insebre.project.controller.PasswordController;
 import com.insebre.project.exception.InvalidPasswordException;
 import com.insebre.project.view.AddProgramForm;
+import com.insebre.project.view.EditProgramForm;
 import com.insebre.project.view.MainForm;
 import com.insebre.project.view.PasswordPromptForm;
 
@@ -20,6 +24,22 @@ public class MainFormController {
     public MainFormController(MainForm mainForm) {
         this.mainForm = mainForm;
 
+        this.mainForm.getAddButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    if(AppController.showingAddProgramForm) throw new Exception("Add Program Form is already open!");
+                    AddProgramForm addProgramForm = new AddProgramForm();
+                    AddProgramFormController addProgramFormController = new AddProgramFormController(addProgramForm);
+                    addProgramFormController.show();
+                    AppController.showingAddProgramForm = true;
+                }
+                catch (Exception ex) {
+                    ExceptionController.handleException(ex);
+                }
+            }
+        });
+
         this.mainForm.getEditButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -33,8 +53,17 @@ public class MainFormController {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         try{
-                            if(!passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException("Invalid Password!");
-                        } catch (InvalidPasswordException ex) {
+                            if(!passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                            else {
+                                if(!PasswordController.checkProgramPassword(mainForm.getTable().getSelectedRow(), passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
+                                if(AppController.showingEditProgramForm) throw new Exception("Edit Program Form is already open!");
+                                AppController.showingEditProgramForm = true;
+                                EditProgramForm editProgramForm = new EditProgramForm();
+                                EditProgramFormController editProgramFormController = new EditProgramFormController(editProgramForm, mainForm.getTable().getSelectedRow());
+                                editProgramFormController.show();
+
+                            }
+                        } catch (Exception ex) {
                             ExceptionController.handleException(ex);
                         }
                     }
@@ -42,12 +71,35 @@ public class MainFormController {
             }
         });
 
-        this.mainForm.getAddButton().addActionListener(new ActionListener() {
+        this.mainForm.getDeleteButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddProgramForm addProgramForm = new AddProgramForm();
-                AddProgramFormController addProgramFormController = new AddProgramFormController(addProgramForm);
-                addProgramFormController.show();
+                if (mainForm.getTable().getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a program to delete!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                PasswordPromptForm passwordPromptForm = new PasswordPromptForm();
+                passwordPromptForm.setVisible(true);
+                passwordPromptForm.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try{
+                            if(!passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                            else {
+                                int selectedProgramIndex = mainForm.getTable().getSelectedRow();
+                                if(!PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
+                                DataController.appData[selectedProgramIndex] = null;
+                                DataController.realocateDataObjects();
+                                DataController.saveData();
+                                PasswordController.deleteProgramPassword(selectedProgramIndex);
+                                DataController.appDataIndex--;
+                                AppController.refreshMainForm();
+                            }
+                        } catch (Exception ex) {
+                            ExceptionController.handleException(ex);
+                        }
+                    }
+                });
             }
         });
     }
@@ -60,11 +112,6 @@ public class MainFormController {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         mainForm.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        throw new IllegalArgumentException("Unknown test exception.");
-    }
-
-    public void hide() {
-        mainForm.getPanel().setVisible(false);
     }
 
     public void setTableData(Object[][] data) {

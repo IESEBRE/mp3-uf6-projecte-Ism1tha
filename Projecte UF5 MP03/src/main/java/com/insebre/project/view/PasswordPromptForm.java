@@ -4,7 +4,8 @@ import javax.swing.*;
 
 public class PasswordPromptForm extends JFrame{
 
-    public boolean isPasswordSubmittedSuccessfully = false;
+    private String password;
+    private boolean isPasswordSubmittedSuccessfully = false;
 
     private JPanel panel1;
     private JPasswordField passwordField1;
@@ -18,25 +19,37 @@ public class PasswordPromptForm extends JFrame{
         setLocationRelativeTo(null);
 
         accessButton.addActionListener(e -> {
-            if (String.valueOf(passwordField1.getPassword()).equals("1234")) {
-                setPasswordSubmittedSuccessfully(true);
+            String password = String.valueOf(passwordField1.getPassword());
+            if(password.length() != 4) {
                 closeForm();
-            } else {
-                setPasswordSubmittedSuccessfully(false);
+            }
+            else {
+                setPasswordSubmittedSuccessfully(true);
+                setSubmittedPassword(password);
                 closeForm();
             }
         });
     }
+
     public void closeForm() {
         dispose();
     }
 
     public void setPasswordSubmittedSuccessfully(boolean submittedSuccessfully) {
         this.isPasswordSubmittedSuccessfully = submittedSuccessfully;
+
     }
 
     public boolean isPasswordSubmittedSuccessfully() {
         return isPasswordSubmittedSuccessfully;
+    }
+
+    public void setSubmittedPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSubmittedPassword() {
+        return password;
     }
 
 }

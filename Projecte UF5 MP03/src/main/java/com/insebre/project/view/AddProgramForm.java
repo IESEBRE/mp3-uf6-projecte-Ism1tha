@@ -2,7 +2,7 @@ package com.insebre.project.view;
 
 import javax.swing.*;
 
-public class AddProgramForm {
+public class AddProgramForm extends JFrame{
     private JPanel panel;
     private JTextField descriptionInput;
     private JTextField nameInput;
@@ -17,14 +17,6 @@ public class AddProgramForm {
     private JLabel languageLabel;
     private JLabel versionLabel;
     private JLabel passwordlabel;
-
-    public AddProgramForm() {
-        JFrame frame = new JFrame("Add Program");
-        frame.setContentPane(getPanel());
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-    }
 
     public JPanel getPanel() {
         return panel;
@@ -58,18 +50,4 @@ public class AddProgramForm {
         return submitButton;
     }
 
-    public void show() {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-        frame.setVisible(true);
-    }
-
-    public void hide() {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-        frame.setVisible(false);
-    }
-
-    public void close() {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-        frame.dispose();
-    }
 }
