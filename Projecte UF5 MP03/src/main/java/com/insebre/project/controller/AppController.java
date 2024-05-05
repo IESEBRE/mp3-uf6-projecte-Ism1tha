@@ -35,8 +35,4 @@ public class AppController {
     public static void refreshMainForm() {
         mainFormController.setTableData(DataController.getParsedPrograms());
     }
-
-    public int getCurrentProgramIndex() {
-        return Main.currentProgramIndex;
-    }
 }
