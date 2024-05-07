@@ -14,7 +14,7 @@ public class Program implements Serializable {
     private String releaseDate;
 
     /* Collection of commits using generics */
-    private final List<Commit> commits = new ArrayList<Commit>();
+    private final SuperCollection<Version> versions = new SuperCollection<>(SuperCollection.CollectionType.ARRAY_LIST);
 
     public Program(String name, String description, String category, String language, String version, String releaseDate) {
         this.name = name;
