@@ -33,10 +33,16 @@ public class AddProgramFormController {
                 String password = new String(addProgramForm.getPasswordInput().getPassword());
 
                 if (name.isEmpty() || description.isEmpty() || category.isEmpty() || language.isEmpty() || version.isEmpty() || password.isEmpty()) {
-                    throw new EmptyFieldFoundException("Please fill all fields!");
+                    throw new EmptyFieldFoundException();
                 }
                 if (!validateVersion(version)) {
-                    throw new InvalidVersionNameException("Invalid version name!");
+                    throw new InvalidVersionNameException();
+                }
+                if (DataController.appDataIndex >= DataController.appData.length) {
+                    throw new Exception("The maximum number of programs has been reached");
+                }
+                if (password.length() != PasswordController.PASSWORD_LENGTH) {
+                    throw new Exception("The password must be 4 characters long");
                 }
                 else {
                     Program program = new Program(name, description, category, language, version, "2021-09-01");

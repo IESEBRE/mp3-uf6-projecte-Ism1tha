@@ -1,12 +1,6 @@
 package com.insebre.project.view;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class MainForm {
     private JTable table1;
@@ -14,8 +8,18 @@ public class MainForm {
     private JButton deleteSelectedProgramButton;
     private JButton editSelectedProgramButton;
     private JButton addNewProgramButton;
+    private JButton viewSelectedProgramVersionsButton;
+    private JLabel selectedSuperCollectionTypeLabel;
+    private JLabel selectedSuperCollectionTotalVersionsLabel;
+    private JButton switchSelectedProgramSupTypeButton;
 
     public MainForm() {
+        selectedSuperCollectionTotalVersionsLabel.setVisible(false);
+        selectedSuperCollectionTypeLabel.setVisible(false);
+        editSelectedProgramButton.setEnabled(false);
+        deleteSelectedProgramButton.setEnabled(false);
+        viewSelectedProgramVersionsButton.setEnabled(false);
+        switchSelectedProgramSupTypeButton.setEnabled(false);
     }
 
     public JPanel getPanel() {
@@ -36,5 +40,17 @@ public class MainForm {
 
     public JButton getDeleteButton() {
         return deleteSelectedProgramButton;
+    }
+
+    public JButton getViewSelectedProgramVersionsButton() { return viewSelectedProgramVersionsButton; }
+
+    public JLabel getSelectedSuperCollectionTotalVersionsLabel() { return selectedSuperCollectionTotalVersionsLabel; }
+
+    public JLabel getSelectedSuperCollectionTypeLabel() {
+        return selectedSuperCollectionTypeLabel;
+    }
+
+    public JButton getSwitchSelectedProgramSupTypeButton() {
+        return switchSelectedProgramSupTypeButton;
     }
 }

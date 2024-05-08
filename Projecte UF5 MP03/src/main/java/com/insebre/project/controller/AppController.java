@@ -1,8 +1,6 @@
 package com.insebre.project.controller;
 
-import com.insebre.project.Main;
 import com.insebre.project.controller.form.MainFormController;
-import com.insebre.project.model.Program;
 import com.insebre.project.view.MainForm;
 
 import java.util.Locale;
@@ -14,6 +12,7 @@ public class AppController {
 
     public static boolean showingAddProgramForm = false;
     public static boolean showingEditProgramForm = false;
+    public static boolean showingViewProgramVersionForm = false;
 
     public void run() {
         try {
@@ -34,5 +33,9 @@ public class AppController {
 
     public static void refreshMainForm() {
         mainFormController.setTableData(DataController.getParsedPrograms());
+    }
+
+    public static void refreshSelectedProgramInformation() {
+        mainFormController.updateAppInformation();
     }
 }

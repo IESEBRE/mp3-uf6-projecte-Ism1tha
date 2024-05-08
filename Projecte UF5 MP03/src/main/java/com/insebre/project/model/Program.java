@@ -14,7 +14,7 @@ public class Program implements Serializable {
     private String releaseDate;
 
     /* Collection of commits using generics */
-    private final SuperCollection<Version> versions = new SuperCollection<>(SuperCollection.CollectionType.ARRAY_LIST);
+    private final SuperCollection<Version> versions;
 
     public Program(String name, String description, String category, String language, String version, String releaseDate) {
         this.name = name;
@@ -23,6 +23,7 @@ public class Program implements Serializable {
         this.language = language;
         this.version = version;
         this.releaseDate = releaseDate;
+        this.versions = new SuperCollection<>(SuperCollection.CollectionType.ARRAY_LIST);
     }
 
     public String getName() {
@@ -71,6 +72,30 @@ public class Program implements Serializable {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public SuperCollection<Version> getVersions() {
+        return versions;
+    }
+
+    public void addVersion(String version, String releaseDate, String commits) {
+        versions.add(new Version(version, releaseDate, commits));
+    }
+
+    public void editVersion(int index, String version, String releaseDate, String commits) {
+        versions.customSet(index, new Version(version, releaseDate, commits));
+    }
+
+    public void deleteVersion(int index) {
+        versions.customDelete(index);
+    }
+
+    public void switchSuperCollectionType() {
+        if (versions.getType() == SuperCollection.CollectionType.ARRAY_LIST) {
+            versions.setType(SuperCollection.CollectionType.TREE_SET);
+        } else {
+            versions.setType(SuperCollection.CollectionType.ARRAY_LIST);
+        }
     }
 
 }

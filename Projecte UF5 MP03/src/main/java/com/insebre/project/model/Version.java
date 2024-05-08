@@ -1,10 +1,12 @@
 package com.insebre.project.model;
 
-public class Version {
+import java.io.Serializable;
 
-    private String version;
-    private String commits;
-    private String date;
+public class Version implements Serializable, Comparable<Version> {
+
+    private final String version;
+    private final String commits;
+    private final String date;
 
     public Version(String version, String commits, String date) {
         this.version = version;
@@ -22,5 +24,14 @@ public class Version {
 
     public String getDate() {
         return date;
+    }
+
+    @Override
+    public int compareTo(Version other) {
+        if (other == null) {
+            throw new NullPointerException("Cannot compare with null");
+        }
+
+        return this.version.compareTo(other.version);
     }
 }

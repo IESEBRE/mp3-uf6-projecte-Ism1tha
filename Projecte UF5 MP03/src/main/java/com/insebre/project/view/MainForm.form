@@ -7,8 +7,8 @@
     <properties>
       <font swing-font="Label.font"/>
       <inheritsPopupMenu value="false"/>
-      <minimumSize width="756" height="300"/>
-      <preferredSize width="756" height="300"/>
+      <minimumSize width="850" height="400"/>
+      <preferredSize width="850" height="400"/>
       <requestFocusEnabled value="true"/>
     </properties>
     <border type="none"/>
@@ -27,7 +27,7 @@
           </component>
         </children>
       </scrollpane>
-      <grid id="e024b" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="e024b" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
         <properties/>
@@ -57,15 +57,57 @@
               <text value="Delete selected program"/>
             </properties>
           </component>
-          <grid id="b2f15" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="b2f15" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <grid id="adbde" layout-manager="GridBagLayout">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <component id="25c71" class="javax.swing.JLabel" binding="selectedSuperCollectionTypeLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <enabled value="true"/>
+                  <text value="Program Supercollection type: None"/>
+                </properties>
+              </component>
+              <component id="a0503" class="javax.swing.JLabel" binding="selectedSuperCollectionTotalVersionsLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="SuperCollection total versions:"/>
+                </properties>
+              </component>
+            </children>
           </grid>
+          <component id="85bb5" class="javax.swing.JButton" binding="viewSelectedProgramVersionsButton">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="View selected program versions"/>
+            </properties>
+          </component>
+          <component id="75dc5" class="javax.swing.JButton" binding="switchSelectedProgramSupTypeButton">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Switch selected program SuperCollection type"/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>

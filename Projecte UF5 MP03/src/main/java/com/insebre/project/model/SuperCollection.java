@@ -1,8 +1,12 @@
 package com.insebre.project.model;
 
+import com.insebre.project.controller.ExceptionController;
+import com.insebre.project.exception.ExistingElementTreeSetException;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class SuperCollection<T> implements List<T>, Set<T> {
+public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
 
     public enum CollectionType {
         ARRAY_LIST,
@@ -79,7 +83,16 @@ public class SuperCollection<T> implements List<T>, Set<T> {
 
     @Override
     public boolean add(T e) {
-        return collection.add(e);
+        if (type == CollectionType.ARRAY_LIST) {
+            return collection.add(e);
+        } else {
+            if (collection.add(e)) {
+                return true;
+            } else {
+                ExceptionController.handleException(new ExistingElementTreeSetException());
+                return false;
+            }
+        }
     }
 
     @Override
@@ -112,7 +125,6 @@ public class SuperCollection<T> implements List<T>, Set<T> {
         collection.clear();
     }
 
-    // List-specific methods (supported only if type is ARRAY_LIST)
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
         if (type == CollectionType.ARRAY_LIST) {
@@ -122,12 +134,33 @@ public class SuperCollection<T> implements List<T>, Set<T> {
         }
     }
 
-    @Override
     public T get(int index) {
         if (type == CollectionType.ARRAY_LIST) {
-            return ((List<T>) collection).get(index);
+            if (index >= 0 && index < ((List<?>) collection).size()) {
+                return ((List<T>) collection).get(index);
+            } else {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        } else if (type == CollectionType.TREE_SET) {
+            if (index < 0 || index >= collection.size()) {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+
+            // Iterate through the TreeSet to find the element at the specified index
+            Iterator<T> iterator = collection.iterator();
+            int currentIndex = 0;
+            while (iterator.hasNext()) {
+                T element = iterator.next();
+                if (currentIndex == index) {
+                    return element;
+                }
+                currentIndex++;
+            }
+
+            // If the index is out of bounds (should not reach here normally)
+            throw new IndexOutOfBoundsException("Index is out of bounds");
         } else {
-            throw new UnsupportedOperationException("get(int index) is not supported for Set");
+            throw new UnsupportedOperationException("get(int index) is not supported for this collection type");
         }
     }
 
@@ -203,10 +236,82 @@ public class SuperCollection<T> implements List<T>, Set<T> {
         }
     }
 
-    // Unsupported methods for Set<T>
-    // Throwing UnsupportedOperationException for Set-specific methods
     @Override
     public Spliterator<T> spliterator() {
         return collection.spliterator();
+    }
+
+    public void customSet(int index, T updatedElement) {
+        if (type == CollectionType.ARRAY_LIST) {
+            if (index >= 0 && index < collection.size()) {
+                ((List<T>) collection).set(index, updatedElement);
+            } else {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        } else if (type == CollectionType.TREE_SET) {
+            // Create a new TreeSet to hold the updated elements
+            TreeSet<T> newSet = new TreeSet<>();
+            int currentIndex = 0;
+            boolean updated = false;
+
+            // Iterate over the existing elements to apply updates
+            for (T element : collection) {
+                if (currentIndex == index) {
+                    // Replace the element at the specified index with the updated element
+                    newSet.add(updatedElement);
+                    updated = true;
+                } else {
+                    // Add the existing element to the new set
+                    newSet.add(element);
+                }
+                currentIndex++;
+            }
+
+            // If the index is valid but out of bounds of the current size, add the updated element to the end
+            if (index == currentIndex && !updated) {
+                newSet.add(updatedElement);
+            }
+
+            // Update the collection to use the new TreeSet
+            collection = newSet;
+        } else {
+            throw new UnsupportedOperationException("Editing by index is not supported for this collection type");
+        }
+    }
+
+    public void customDelete(int index) {
+        if (type == CollectionType.ARRAY_LIST) {
+            if (index >= 0 && index < collection.size()) {
+                ((List<T>) collection).remove(index);
+            } else {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        } else if (type == CollectionType.TREE_SET) {
+            // Create a new TreeSet to hold the updated elements
+            TreeSet<T> newSet = new TreeSet<>();
+            int currentIndex = 0;
+            boolean removed = false;
+
+            // Iterate over the existing elements to exclude the element at the specified index
+            for (T element : collection) {
+                if (currentIndex != index) {
+                    // Add the existing element to the new set (excluding the element at the specified index)
+                    newSet.add(element);
+                } else {
+                    removed = true;
+                }
+                currentIndex++;
+            }
+
+            // If the element at the specified index was not found, throw an exception
+            if (!removed) {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+
+            // Update the collection to use the new TreeSet without the deleted element
+            collection = newSet;
+        } else {
+            throw new UnsupportedOperationException("Deleting by index is not supported for this collection type");
+        }
     }
 }

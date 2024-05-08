@@ -66,19 +66,15 @@
                 ObjectOutputStream oos = new ObjectOutputStream(bos);
                 for(int i = 0; i < appDataIndex; i++) {
                     if(appData[i] != null ) {
-                        System.out.println("Saving program: " + i);
                         oos.writeObject(appData[i]);
                     }
-                    System.out.println("Program saved: " + i);
                 }
                 oos.close();
                 bos.close();
                 fos.close();
             } catch (FileNotFoundException ex) {
-                System.out.println("A");
                 ExceptionController.handleException(new FileNullOnSaveException());
             } catch (IOException ex) {
-                System.out.println("B");
                 ExceptionController.handleException(ex);
             }
         }
@@ -113,5 +109,56 @@
                 parsedPrograms[i][5] = programs[i].getReleaseDate();
             }
             return parsedPrograms;
+        }
+
+        public static Object[][] getParsedProgramVersions(int programIndex) {
+            Program program = appData[programIndex];
+            if (program == null || program.getVersions() == null || program.getVersions().isEmpty()) {
+                return new Object[0][3]; // Return an empty 2D array with 0 rows and 3 columns
+            }
+
+            Object[][] parsedProgramVersions = new Object[program.getVersions().size()][3];
+            for (int i = 0; i < program.getVersions().size(); i++) {
+                parsedProgramVersions[i][0] = program.getVersions().get(i).getVersion();
+                parsedProgramVersions[i][1] = program.getVersions().get(i).getDate();
+                parsedProgramVersions[i][2] = program.getVersions().get(i).getCommits();
+            }
+            return parsedProgramVersions;
+        }
+
+        public static void addProgramVersion(int programIndex, String version, String releaseDate, String commits) {
+            Program program = appData[programIndex];
+            if (program == null) {
+                return;
+            }
+            program.addVersion(version, releaseDate, commits);
+            saveData();
+        }
+
+        public static void editProgramVersion(int programIndex, int versionIndex, String version, String releaseDate, String commits) {
+            Program program = appData[programIndex];
+            if (program == null) {
+                return;
+            }
+            program.editVersion(versionIndex, version, releaseDate, commits);
+            saveData();
+        }
+
+        public static void deleteProgramVersion(int programIndex, int versionIndex) {
+            Program program = appData[programIndex];
+            if (program == null) {
+                return;
+            }
+            program.deleteVersion(versionIndex);
+            saveData();
+        }
+
+        public static void switchProgramSuperCollectionType(int programIndex) {
+            Program program = appData[programIndex];
+            if (program == null) {
+                return;
+            }
+            program.switchSuperCollectionType();
+            saveData();
         }
     }

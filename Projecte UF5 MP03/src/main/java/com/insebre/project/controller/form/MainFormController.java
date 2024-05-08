@@ -5,13 +5,13 @@ import com.insebre.project.controller.DataController;
 import com.insebre.project.controller.ExceptionController;
 import com.insebre.project.controller.PasswordController;
 import com.insebre.project.exception.InvalidPasswordException;
-import com.insebre.project.view.AddProgramForm;
-import com.insebre.project.view.EditProgramForm;
-import com.insebre.project.view.MainForm;
-import com.insebre.project.view.PasswordPromptForm;
+import com.insebre.project.model.SuperCollection;
+import com.insebre.project.model.Version;
+import com.insebre.project.view.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.crypto.Data;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -102,6 +102,71 @@ public class MainFormController {
                 });
             }
         });
+
+        this.mainForm.getViewSelectedProgramVersionsButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mainForm.getTable().getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a program to view its versions!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                PasswordPromptForm passwordPromptForm = new PasswordPromptForm();
+                passwordPromptForm.setVisible(true);
+                passwordPromptForm.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try{
+                            if(!passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                            else {
+                                int selectedProgramIndex = mainForm.getTable().getSelectedRow();
+                                if(!PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
+                                if(AppController.showingViewProgramVersionForm) throw new Exception("View Program Versions Form is already open!");
+                                ProgramVersionsForm programVersionsForm = new ProgramVersionsForm();
+                                ProgramVersionsFormController programVersionsFormController = new ProgramVersionsFormController(programVersionsForm, selectedProgramIndex);
+                                programVersionsFormController.setTableData(DataController.getParsedProgramVersions(selectedProgramIndex));
+                                programVersionsFormController.show();
+                                AppController.showingViewProgramVersionForm = true;
+                            }
+                        } catch (Exception ex) {
+                            ExceptionController.handleException(ex);
+                        }
+                    }
+                });
+            }
+        });
+
+        this.mainForm.getSwitchSelectedProgramSupTypeButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mainForm.getTable().getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a program to switch its SuperCollection type!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                PasswordPromptForm passwordPromptForm = new PasswordPromptForm();
+                passwordPromptForm.setVisible(true);
+                passwordPromptForm.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try{
+                            if(!passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                            else {
+                                int selectedProgramIndex = mainForm.getTable().getSelectedRow();
+                                if(!PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
+                                DataController.switchProgramSuperCollectionType(selectedProgramIndex);
+                                DataController.saveData();
+                                AppController.refreshSelectedProgramInformation();
+                            }
+                        } catch (Exception ex) {
+                            ExceptionController.handleException(ex);
+                        }
+                    }
+                });
+            }
+        });
+
+        this.mainForm.getTable().getSelectionModel().addListSelectionListener(e -> {
+            updateAppInformation();
+        });
     }
 
     public void show() {
@@ -112,6 +177,32 @@ public class MainFormController {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         mainForm.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+
+    public void updateAppInformation() {
+        if (mainForm.getTable().getSelectedRow() != -1) {
+            int selectedIndex = mainForm.getTable().getSelectedRow();
+            SuperCollection<Version> superCollection = DataController.appData[selectedIndex].getVersions();
+            if (superCollection.getType() == SuperCollection.CollectionType.ARRAY_LIST) {
+                mainForm.getSelectedSuperCollectionTypeLabel().setText("SuperCollection Type: ArrayList");
+            } else {
+                mainForm.getSelectedSuperCollectionTypeLabel().setText("SuperCollection Type: TreeSet");
+            }
+            mainForm.getSelectedSuperCollectionTypeLabel().setVisible(true);
+            mainForm.getEditButton().setEnabled(true);
+            mainForm.getDeleteButton().setEnabled(true);
+            mainForm.getViewSelectedProgramVersionsButton().setEnabled(true);
+            mainForm.getSelectedSuperCollectionTotalVersionsLabel().setText("Total Versions: " + superCollection.size());
+            mainForm.getSelectedSuperCollectionTotalVersionsLabel().setVisible(true);
+            mainForm.getSwitchSelectedProgramSupTypeButton().setEnabled(true);
+        } else {
+            mainForm.getSelectedSuperCollectionTotalVersionsLabel().setVisible(false);
+            mainForm.getSelectedSuperCollectionTypeLabel().setVisible(false);
+            mainForm.getEditButton().setEnabled(false);
+            mainForm.getDeleteButton().setEnabled(false);
+            mainForm.getViewSelectedProgramVersionsButton().setEnabled(false);
+            mainForm.getSwitchSelectedProgramSupTypeButton().setEnabled(false);
+        }
     }
 
     public void setTableData(Object[][] data) {
