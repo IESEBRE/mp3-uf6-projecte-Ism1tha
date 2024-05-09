@@ -22,6 +22,7 @@ public class ExceptionController {
         exceptionMessages.put(EmptyFieldFoundException.class, "An empty field was found. Please fill all fields");
         exceptionMessages.put(InvalidVersionNameException.class, "Invalid version name");
         exceptionMessages.put(ExistingElementTreeSetException.class, "The element already exists in the TreeSet");
+        exceptionMessages.put(InvalidInputFormatException.class, "Invalid input format");
     }
 
     public static void handleException(Exception ex) {

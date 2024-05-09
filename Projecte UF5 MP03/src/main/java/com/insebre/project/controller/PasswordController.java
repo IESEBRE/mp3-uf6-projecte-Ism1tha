@@ -9,7 +9,7 @@ public class PasswordController {
 
     public static boolean checkProgramPassword(int programIndex, String password){
         String storedPassword = readProgramPassword(programIndex);
-        return storedPassword.equals(password);
+        return !storedPassword.equals(password);
     }
 
     public static void insertProgramPassword(int programIndex, String password){

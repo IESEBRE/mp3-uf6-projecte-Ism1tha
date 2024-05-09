@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class Version implements Serializable, Comparable<Version> {
 
     private final String version;
-    private final String commits;
     private final String date;
+    private final String commits;
 
-    public Version(String version, String commits, String date) {
+    public Version(String version, String date, String commits) {
         this.version = version;
-        this.commits = commits;
         this.date = date;
+        this.commits = commits;
     }
 
     public String getVersion() {

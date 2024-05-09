@@ -3,6 +3,8 @@ package com.insebre.project.controller.form;
 import com.insebre.project.controller.AppController;
 import com.insebre.project.controller.DataController;
 import com.insebre.project.controller.PasswordController;
+import com.insebre.project.exception.EmptyFieldFoundException;
+import com.insebre.project.exception.InvalidInputFormatException;
 import com.insebre.project.view.EditProgramForm;
 
 import javax.swing.*;
@@ -31,7 +33,7 @@ public class EditProgramFormController {
         editProgramForm.getDescriptionInput().setText(DataController.appData[programIndex].getDescription());
         editProgramForm.getCategoryInput().setText(DataController.appData[programIndex].getCategory());
         editProgramForm.getLanguageInput().setText(DataController.appData[programIndex].getLanguage());
-        editProgramForm.getVersionInput().setText(DataController.appData[programIndex].getVersion());
+        editProgramForm.getReleaseDateInput().setText(DataController.appData[programIndex].getReleaseDate());
         editProgramForm.getPasswordInput().setText(PasswordController.readProgramPassword(programIndex));
 
         dialog.setVisible(true);
@@ -42,22 +44,28 @@ public class EditProgramFormController {
                 String description = editProgramForm.getDescriptionInput().getText();
                 String category = editProgramForm.getCategoryInput().getText();
                 String language = editProgramForm.getLanguageInput().getText();
-                String version = editProgramForm.getVersionInput().getText();
+                String releaseDate = editProgramForm.getReleaseDateInput().getText();
                 String password = editProgramForm.getPasswordInput().getText();
 
-                if (name.isEmpty() || description.isEmpty() || category.isEmpty() || language.isEmpty() || version.isEmpty() || password.isEmpty()) {
-                    throw new Exception("Please fill all fields!");
+                if(name.isEmpty()) throw new EmptyFieldFoundException("Name");
+                if(description.isEmpty()) throw new EmptyFieldFoundException("Description");
+                if(category.isEmpty()) throw new EmptyFieldFoundException("Category");
+                if(language.isEmpty()) throw new EmptyFieldFoundException("Language");
+                if(releaseDate.isEmpty()) throw new EmptyFieldFoundException("Release Date");
+                if(password.isEmpty()) throw new EmptyFieldFoundException("Password");
+
+                if (AppController.validateReleaseDate(releaseDate)) {
+                    throw new InvalidInputFormatException("Invalid release date format (yyyy-mm-dd) or future date");
                 }
-                if (!validateVersion(version)) {
-                    throw new Exception("Invalid version name!");
+                if (password.length() != PasswordController.PASSWORD_LENGTH) {
+                    throw new Exception("The password must be 4 characters long");
                 }
                 else {
                     DataController.appData[programIndex].setName(name);
                     DataController.appData[programIndex].setDescription(description);
                     DataController.appData[programIndex].setCategory(category);
                     DataController.appData[programIndex].setLanguage(language);
-                    DataController.appData[programIndex].setVersion(version);
-                    DataController.appData[programIndex].setReleaseDate("2021-09-01");
+                    DataController.appData[programIndex].setReleaseDate(releaseDate);
                     DataController.saveData();
                     PasswordController.insertProgramPassword(programIndex, password);
                     JOptionPane.showMessageDialog(null, "Program edited successfully!");
@@ -75,10 +83,6 @@ public class EditProgramFormController {
                 AppController.refreshMainForm();
             }
         });
-    }
-
-    public boolean validateVersion(String version) {
-        return version.matches("^[0-9]+\\.[0-9]+\\.[0-9]+$");
     }
 
 }

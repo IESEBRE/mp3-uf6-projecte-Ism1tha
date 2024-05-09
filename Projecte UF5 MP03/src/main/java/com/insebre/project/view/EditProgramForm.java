@@ -7,7 +7,6 @@ public class EditProgramForm {
     private JTextField descriptionInput;
     private JTextField nameInput;
     private JTextField languageInput;
-    private JTextField versionInput;
     private JButton submitButton;
     private JTextField categoryInput;
     private JPasswordField passwordInput;
@@ -15,32 +14,25 @@ public class EditProgramForm {
     private JLabel descriptionLabel;
     private JLabel categoryLabel;
     private JLabel languageLabel;
-    private JLabel versionLabel;
     private JLabel passwordlabel;
+    private JTextField releaseDateInput;
+    private JLabel releaseDateLabel;
 
     public JPanel getPanel() {
         return panel;
     }
 
-    public JTextField getNameInput() {
-        return nameInput;
-    }
+    public JTextField getNameInput() { return nameInput; }
 
-    public JTextField getDescriptionInput() {
-        return descriptionInput;
-    }
+    public JTextField getDescriptionInput() { return descriptionInput; }
 
-    public JTextField getCategoryInput() {
-        return categoryInput;
-    }
+    public JTextField getCategoryInput() { return categoryInput; }
 
     public JTextField getLanguageInput() {
         return languageInput;
     }
 
-    public JTextField getVersionInput() {
-        return versionInput;
-    }
+    public JTextField getReleaseDateInput() { return releaseDateInput; }
 
     public JPasswordField getPasswordInput() {
         return passwordInput;

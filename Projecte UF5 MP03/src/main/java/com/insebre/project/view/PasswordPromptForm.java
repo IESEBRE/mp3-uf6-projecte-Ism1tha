@@ -41,7 +41,7 @@ public class PasswordPromptForm extends JFrame{
     }
 
     public boolean isPasswordSubmittedSuccessfully() {
-        return isPasswordSubmittedSuccessfully;
+        return !isPasswordSubmittedSuccessfully;
     }
 
     public void setSubmittedPassword(String password) {

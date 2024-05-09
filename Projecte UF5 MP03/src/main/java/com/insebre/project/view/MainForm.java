@@ -12,6 +12,8 @@ public class MainForm {
     private JLabel selectedSuperCollectionTypeLabel;
     private JLabel selectedSuperCollectionTotalVersionsLabel;
     private JButton switchSelectedProgramSupTypeButton;
+    private JLabel selectedSuperCollectionLastTotalVersionsLabel;
+    private JLabel imgLabel;
 
     public MainForm() {
         selectedSuperCollectionTotalVersionsLabel.setVisible(false);
@@ -20,6 +22,7 @@ public class MainForm {
         deleteSelectedProgramButton.setEnabled(false);
         viewSelectedProgramVersionsButton.setEnabled(false);
         switchSelectedProgramSupTypeButton.setEnabled(false);
+        selectedSuperCollectionLastTotalVersionsLabel.setVisible(false);
     }
 
     public JPanel getPanel() {
@@ -50,7 +53,9 @@ public class MainForm {
         return selectedSuperCollectionTypeLabel;
     }
 
-    public JButton getSwitchSelectedProgramSupTypeButton() {
-        return switchSelectedProgramSupTypeButton;
-    }
+    public JLabel getSelectedSuperCollectionLastTotalVersionsLabel() { return selectedSuperCollectionLastTotalVersionsLabel; }
+
+    public JButton getSwitchSelectedProgramSupTypeButton() { return switchSelectedProgramSupTypeButton; }
+
+    public JLabel getImgLabel() { return imgLabel; }
 }

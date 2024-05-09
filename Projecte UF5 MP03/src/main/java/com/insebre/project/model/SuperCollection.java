@@ -136,7 +136,7 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
 
     public T get(int index) {
         if (type == CollectionType.ARRAY_LIST) {
-            if (index >= 0 && index < ((List<?>) collection).size()) {
+            if (index >= 0 && index < collection.size()) {
                 return ((List<T>) collection).get(index);
             } else {
                 throw new IndexOutOfBoundsException("Index is out of bounds");
@@ -254,25 +254,20 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
             int currentIndex = 0;
             boolean updated = false;
 
-            // Iterate over the existing elements to apply updates
             for (T element : collection) {
                 if (currentIndex == index) {
-                    // Replace the element at the specified index with the updated element
                     newSet.add(updatedElement);
                     updated = true;
                 } else {
-                    // Add the existing element to the new set
                     newSet.add(element);
                 }
                 currentIndex++;
             }
 
-            // If the index is valid but out of bounds of the current size, add the updated element to the end
             if (index == currentIndex && !updated) {
                 newSet.add(updatedElement);
             }
 
-            // Update the collection to use the new TreeSet
             collection = newSet;
         } else {
             throw new UnsupportedOperationException("Editing by index is not supported for this collection type");
@@ -287,15 +282,12 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
                 throw new IndexOutOfBoundsException("Index is out of bounds");
             }
         } else if (type == CollectionType.TREE_SET) {
-            // Create a new TreeSet to hold the updated elements
             TreeSet<T> newSet = new TreeSet<>();
             int currentIndex = 0;
             boolean removed = false;
 
-            // Iterate over the existing elements to exclude the element at the specified index
             for (T element : collection) {
                 if (currentIndex != index) {
-                    // Add the existing element to the new set (excluding the element at the specified index)
                     newSet.add(element);
                 } else {
                     removed = true;
@@ -303,12 +295,10 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
                 currentIndex++;
             }
 
-            // If the element at the specified index was not found, throw an exception
             if (!removed) {
                 throw new IndexOutOfBoundsException("Index is out of bounds");
             }
 
-            // Update the collection to use the new TreeSet without the deleted element
             collection = newSet;
         } else {
             throw new UnsupportedOperationException("Deleting by index is not supported for this collection type");

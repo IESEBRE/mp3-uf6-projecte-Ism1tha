@@ -1,8 +1,6 @@
 package com.insebre.project.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Program implements Serializable {
 
@@ -10,18 +8,14 @@ public class Program implements Serializable {
     private String description;
     private String category;
     private String language;
-    private String version;
     private String releaseDate;
-
-    /* Collection of commits using generics */
     private final SuperCollection<Version> versions;
 
-    public Program(String name, String description, String category, String language, String version, String releaseDate) {
+    public Program(String name, String description, String category, String language, String releaseDate) {
         this.name = name;
         this.description = description;
         this.category = category;
         this.language = language;
-        this.version = version;
         this.releaseDate = releaseDate;
         this.versions = new SuperCollection<>(SuperCollection.CollectionType.ARRAY_LIST);
     }
@@ -43,7 +37,11 @@ public class Program implements Serializable {
     }
 
     public String getVersion() {
-        return version;
+        if(this.versions.isEmpty()) {
+            return "No versions";
+        }
+        Version lastVersion = this.versions.get(this.versions.size() - 1);
+        return lastVersion.getVersion();
     }
 
     public String getReleaseDate() {
@@ -64,10 +62,6 @@ public class Program implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public void setReleaseDate(String releaseDate) {
