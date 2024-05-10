@@ -5,9 +5,15 @@ import com.insebre.project.exception.*;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.io.FileNotFoundException;
 
+/**
+ * Controller class responsible for handling exceptions and displaying error messages.
+ * This class maps specific exception types to corresponding error messages for user-friendly error handling.
+ *
+ * @author Ismael Semmar Galvez
+ * @version 1.0
+ */
 public class ExceptionController {
 
     private static final Map<Class<? extends Exception>, String> exceptionMessages = new HashMap<>();
@@ -25,11 +31,22 @@ public class ExceptionController {
         exceptionMessages.put(InvalidInputFormatException.class, "Invalid input format");
     }
 
+    /**
+     * Handles the given exception by building an error message and displaying it using a message dialog.
+     *
+     * @param ex The exception to handle.
+     */
     public static void handleException(Exception ex) {
         String errorMessage = buildErrorMessage(ex);
         showMessageDialog(errorMessage);
     }
 
+    /**
+     * Builds an error message based on the given exception.
+     *
+     * @param ex The exception for which to generate the error message.
+     * @return The formatted error message.
+     */
     private static String buildErrorMessage(Exception ex) {
         Class<? extends Exception> exClass = ex.getClass();
         String defaultMessage = "An unexpected error occurred";
@@ -55,6 +72,11 @@ public class ExceptionController {
         return errorMessageBuilder.toString();
     }
 
+    /**
+     * Displays the given error message in a message dialog with the title "Error".
+     *
+     * @param errorMessage The error message to display.
+     */
     private static void showMessageDialog(String errorMessage) {
         JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }

@@ -16,20 +16,35 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller for managing program versions within the software manager application.
+ *
+ * @author Ismael Semmar Galvez
+ * @version 1.0
+ */
 public class ProgramVersionsFormController {
 
     private final ProgramVersionsForm programVersionsForm;
-    private final int programIndex;
+    private int programIndex;
 
+    /**
+     * Constructs a ProgramVersionsFormController with the specified ProgramVersionsForm and program index.
+     *
+     * @param programVersionsForm The ProgramVersionsForm instance to be controlled.
+     * @param programIndex       The index of the program in the data.
+     */
     public ProgramVersionsFormController(ProgramVersionsForm programVersionsForm, int programIndex) {
         this.programVersionsForm = programVersionsForm;
         this.programIndex = programIndex;
     }
 
+    /**
+     * Displays the program versions form dialog.
+     */
     public void show() {
         String programName = DataController.appData[programIndex].getName();
         JDialog dialog = new JDialog();
-        dialog.setTitle("Program versions - " + programName);
+        dialog.setTitle("Program Versions - " + programName);
         dialog.setContentPane(programVersionsForm.getPanel());
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.pack();
@@ -37,6 +52,7 @@ public class ProgramVersionsFormController {
         dialog.setVisible(true);
         programVersionsForm.getTable1().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        // ListSelectionListener for table selection
         programVersionsForm.getTable1().getSelectionModel().addListSelectionListener(e -> {
             if (programVersionsForm.getTable1().getSelectedRow() != -1) {
                 int selectedIndex = programVersionsForm.getTable1().getSelectedRow();
@@ -50,6 +66,7 @@ public class ProgramVersionsFormController {
             }
         });
 
+        // Add New Version Button ActionListener
         programVersionsForm.getAddNewVersionButton().addActionListener(e -> {
             try {
                 String version = programVersionsForm.getVersionInput().getText();
@@ -59,29 +76,26 @@ public class ProgramVersionsFormController {
                 if (releaseDate.isEmpty()) throw new EmptyFieldFoundException("Release Date");
                 if (commits.isEmpty()) throw new EmptyFieldFoundException("Commits");
                 if (AppController.validateVersion(version)) throw new InvalidVersionNameException("Invalid version name (x.x.x)");
-                if (AppController.validateReleaseDate(releaseDate)) throw new Exception("Invalid release date format (yyyy-mm-dd)");
-
+                if (AppController.validateReleaseDate(releaseDate))
+                    throw new Exception("Invalid release date format (yyyy-mm-dd)");
                 Version lastVersion = DataController.appData[programIndex].getVersions().get(DataController.appData[programIndex].getVersions().size() - 1);
-                if(compareVersions(version, lastVersion.getVersion()) < 1) {
+                if (compareVersions(version, lastVersion.getVersion()) <= 0) {
                     throw new IllegalArgumentException("Version must be greater than the last version");
                 }
-
                 LocalDate newReleaseDate = LocalDate.parse(releaseDate, DateTimeFormatter.ISO_LOCAL_DATE);
                 LocalDate lastReleaseDate = LocalDate.parse(lastVersion.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
-
                 if (lastReleaseDate.isAfter(newReleaseDate)) {
                     throw new IllegalArgumentException("Release date must be after the release date of the last version");
                 }
-
                 DataController.addProgramVersion(programIndex, version, releaseDate, commits);
                 setTableData(DataController.getParsedProgramVersions(programIndex));
                 AppController.refreshSelectedProgramInformation();
-
             } catch (Exception ex) {
                 ExceptionController.handleException(ex);
             }
         });
 
+        // Save Version Button ActionListener
         programVersionsForm.getSaveVersionButton().addActionListener(e -> {
             try {
                 if (programVersionsForm.getTable1().getSelectedRow() == -1) {
@@ -96,18 +110,14 @@ public class ProgramVersionsFormController {
                 if (releaseDate.isEmpty()) throw new EmptyFieldFoundException("Release Date");
                 if (commits.isEmpty()) throw new EmptyFieldFoundException("Commits");
                 if (AppController.validateVersion(version)) throw new InvalidVersionNameException("Invalid version name (x.x.x)");
-                if (AppController.validateReleaseDate(releaseDate)) throw new Exception("Invalid release date format (yyyy-mm-dd) or future date");
-
+                if (AppController.validateReleaseDate(releaseDate))
+                    throw new Exception("Invalid release date format (yyyy-mm-dd) or future date");
                 Version lastVersion = DataController.appData[programIndex].getVersions().get(DataController.appData[programIndex].getVersions().size() - 1);
-                System.out.println(compareVersions(version, lastVersion.getVersion()));
-
                 LocalDate newReleaseDate = LocalDate.parse(releaseDate, DateTimeFormatter.ISO_LOCAL_DATE);
                 LocalDate lastReleaseDate = LocalDate.parse(lastVersion.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
-
                 if (!newReleaseDate.isAfter(lastReleaseDate)) {
                     throw new IllegalArgumentException("Release date must be after the release date of the last version");
                 }
-
                 DataController.editProgramVersion(programIndex, selectedIndex, version, releaseDate, commits);
                 setTableData(DataController.getParsedProgramVersions(programIndex));
             } catch (Exception ex) {
@@ -115,6 +125,7 @@ public class ProgramVersionsFormController {
             }
         });
 
+        // Delete Version Button ActionListener
         programVersionsForm.getDeleteVersionButton().addActionListener(e -> {
             if (programVersionsForm.getTable1().getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(null, "Please select a version to delete.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -126,6 +137,7 @@ public class ProgramVersionsFormController {
             AppController.refreshSelectedProgramInformation();
         });
 
+        // WindowListener to handle dialog closing
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -133,9 +145,13 @@ public class ProgramVersionsFormController {
                 AppController.refreshMainForm();
             }
         });
-
     }
 
+    /**
+     * Sets the table data in the program versions form.
+     *
+     * @param data The data to set in the table.
+     */
     public void setTableData(Object[][] data) {
         DefaultTableModel model = new DefaultTableModel(data, new String[]{"Version", "Release Date", "Commits"}) {
             @Override
@@ -143,10 +159,19 @@ public class ProgramVersionsFormController {
                 return false;
             }
         };
-
         programVersionsForm.getTable1().setModel(model);
     }
 
+    /**
+     * Compares two version strings in the format x.x.x.
+     *
+     * @param version1 The first version string.
+     * @param version2 The second version string.
+     * @return An integer value representing the comparison result:
+     *         -1 if version1 < version2,
+     *         0 if version1 == version2,
+     *         1 if version1 > version2.
+     */
     private int compareVersions(String version1, String version2) {
         String[] parts1 = version1.split("\\.");
         String[] parts2 = version2.split("\\.");
@@ -170,5 +195,4 @@ public class ProgramVersionsFormController {
         int patch2 = Integer.parseInt(parts2[2]);
         return Integer.compare(patch1, patch2);
     }
-
 }

@@ -18,26 +18,38 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Controller for the main form of the software manager application.
+ *
+ * @author Ismael Semmar Galvez
+ * @version 1.0
+ */
 public class MainFormController {
 
     private final MainForm mainForm;
 
+    /**
+     * Constructor for MainFormController.
+     *
+     * @param mainForm The main form instance to be controlled.
+     */
     public MainFormController(MainForm mainForm) {
         this.mainForm = mainForm;
 
+        // Add Button ActionListener
         this.mainForm.getAddButton().addActionListener(e -> {
-            try{
-                if(AppController.showingAddProgramForm) throw new Exception("Add Program Form is already open!");
+            try {
+                if (AppController.showingAddProgramForm) throw new Exception("Add Program Form is already open!");
                 AddProgramForm addProgramForm = new AddProgramForm();
                 AddProgramFormController addProgramFormController = new AddProgramFormController(addProgramForm);
                 addProgramFormController.show();
                 AppController.showingAddProgramForm = true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ExceptionController.handleException(ex);
             }
         });
 
+        // Edit Button ActionListener
         this.mainForm.getEditButton().addActionListener(e -> {
             if (mainForm.getTable().getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(null, "Please select a program to edit!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -48,16 +60,16 @@ public class MainFormController {
             passwordPromptForm.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    try{
-                        if(passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                    try {
+                        if (passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
                         else {
-                            if(PasswordController.checkProgramPassword(mainForm.getTable().getSelectedRow(), passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
-                            if(AppController.showingEditProgramForm) throw new Exception("Edit Program Form is already open!");
+                            if (PasswordController.checkProgramPassword(mainForm.getTable().getSelectedRow(), passwordPromptForm.getSubmittedPassword()))
+                                throw new InvalidPasswordException();
+                            if (AppController.showingEditProgramForm) throw new Exception("Edit Program Form is already open!");
                             AppController.showingEditProgramForm = true;
                             EditProgramForm editProgramForm = new EditProgramForm();
                             EditProgramFormController editProgramFormController = new EditProgramFormController(editProgramForm, mainForm.getTable().getSelectedRow());
                             editProgramFormController.show();
-
                         }
                     } catch (Exception ex) {
                         ExceptionController.handleException(ex);
@@ -66,6 +78,7 @@ public class MainFormController {
             });
         });
 
+        // Delete Button ActionListener
         this.mainForm.getDeleteButton().addActionListener(e -> {
             if (mainForm.getTable().getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(null, "Please select a program to delete!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -76,13 +89,14 @@ public class MainFormController {
             passwordPromptForm.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    try{
-                        if(passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                    try {
+                        if (passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
                         else {
                             int selectedProgramIndex = mainForm.getTable().getSelectedRow();
-                            if(PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
+                            if (PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword()))
+                                throw new InvalidPasswordException();
                             DataController.appData[selectedProgramIndex] = null;
-                            DataController.realocateDataObjects();
+                            DataController.reallocateDataObjects();
                             DataController.saveData();
                             PasswordController.deleteProgramPassword(selectedProgramIndex);
                             DataController.appDataIndex--;
@@ -95,6 +109,7 @@ public class MainFormController {
             });
         });
 
+        // View Selected Program Versions Button ActionListener
         this.mainForm.getViewSelectedProgramVersionsButton().addActionListener(e -> {
             if (mainForm.getTable().getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(null, "Please select a program to view its versions!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -105,12 +120,13 @@ public class MainFormController {
             passwordPromptForm.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    try{
-                        if(passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                    try {
+                        if (passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
                         else {
                             int selectedProgramIndex = mainForm.getTable().getSelectedRow();
-                            if(PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
-                            if(AppController.showingViewProgramVersionForm) throw new Exception("View Program Versions Form is already open!");
+                            if (PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword()))
+                                throw new InvalidPasswordException();
+                            if (AppController.showingViewProgramVersionForm) throw new Exception("View Program Versions Form is already open!");
                             ProgramVersionsForm programVersionsForm = new ProgramVersionsForm();
                             ProgramVersionsFormController programVersionsFormController = new ProgramVersionsFormController(programVersionsForm, selectedProgramIndex);
                             programVersionsFormController.setTableData(DataController.getParsedProgramVersions(selectedProgramIndex));
@@ -124,6 +140,7 @@ public class MainFormController {
             });
         });
 
+        // Switch Selected Program SuperCollection Type Button ActionListener
         this.mainForm.getSwitchSelectedProgramSupTypeButton().addActionListener(e -> {
             if (mainForm.getTable().getSelectedRow() == -1) {
                 JOptionPane.showMessageDialog(null, "Please select a program to switch its SuperCollection type!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -134,12 +151,14 @@ public class MainFormController {
             passwordPromptForm.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    try{
-                        if(passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
-                        if(AppController.showingViewProgramVersionForm) throw new Exception("Close the View Program Versions Form before switching the SuperCollection type");
+                    try {
+                        if (passwordPromptForm.isPasswordSubmittedSuccessfully()) throw new InvalidPasswordException();
+                        if (AppController.showingViewProgramVersionForm)
+                            throw new Exception("Close the View Program Versions Form before switching the SuperCollection type");
                         else {
                             int selectedProgramIndex = mainForm.getTable().getSelectedRow();
-                            if(PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword())) throw new InvalidPasswordException();
+                            if (PasswordController.checkProgramPassword(selectedProgramIndex, passwordPromptForm.getSubmittedPassword()))
+                                throw new InvalidPasswordException();
                             DataController.switchProgramSuperCollectionType(selectedProgramIndex);
                             DataController.saveData();
                             AppController.refreshSelectedProgramInformation();
@@ -154,6 +173,9 @@ public class MainFormController {
         this.mainForm.getTable().getSelectionModel().addListSelectionListener(e -> updateAppInformation());
     }
 
+    /**
+     * Displays the main form.
+     */
     public void show() {
         JFrame frame = new JFrame("Software Manager - Ismael SG");
         frame.setContentPane(mainForm.getPanel());
@@ -164,6 +186,9 @@ public class MainFormController {
         mainForm.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
+    /**
+     * Updates information on the main form based on the selected row in the table.
+     */
     public void updateAppInformation() {
         if (mainForm.getTable().getSelectedRow() != -1) {
             int selectedIndex = mainForm.getTable().getSelectedRow();
@@ -208,10 +233,14 @@ public class MainFormController {
             mainForm.getDeleteButton().setEnabled(false);
             mainForm.getViewSelectedProgramVersionsButton().setEnabled(false);
             mainForm.getSwitchSelectedProgramSupTypeButton().setEnabled(false);
-
         }
     }
 
+    /**
+     * Sets table data for the main form.
+     *
+     * @param data The data to set in the table.
+     */
     public void setTableData(Object[][] data) {
         DefaultTableModel model = new DefaultTableModel(data, new String[]{"Name", "Description", "Category", "Language", "Version", "Release Date"}) {
             @Override
@@ -222,6 +251,9 @@ public class MainFormController {
         mainForm.getTable().setModel(model);
     }
 
+    /**
+     * Sets images for the main form.
+     */
     public void setImages() {
         ImageIcon icon = new ImageIcon("resources/logo.png");
         JLabel imgLabel = mainForm.getImgLabel();
