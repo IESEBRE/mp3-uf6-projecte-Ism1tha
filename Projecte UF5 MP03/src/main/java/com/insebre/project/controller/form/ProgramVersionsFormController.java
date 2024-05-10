@@ -78,7 +78,11 @@ public class ProgramVersionsFormController {
                 if (AppController.validateVersion(version)) throw new InvalidVersionNameException("Invalid version name (x.x.x)");
                 if (AppController.validateReleaseDate(releaseDate))
                     throw new Exception("Invalid release date format (yyyy-mm-dd)");
-                Version lastVersion = DataController.appData[programIndex].getVersions().get(DataController.appData[programIndex].getVersions().size() - 1);
+                int programVersions = DataController.appData[programIndex].getVersions().size();
+                Version lastVersion = null;
+                if(programVersions == 0) lastVersion = new Version("0.0.0", "2021-01-01", "Initial version");
+                else lastVersion = DataController.appData[programIndex].getVersions().get(programVersions - 1);
+
                 if (compareVersions(version, lastVersion.getVersion()) <= 0) {
                     throw new IllegalArgumentException("Version must be greater than the last version");
                 }

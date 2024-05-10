@@ -170,12 +170,35 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
 
     @Override
     public T get(int index) {
-        if (collection instanceof List) {
-            return ((List<T>) collection).get(index);
+        if (type == CollectionType.ARRAY_LIST) {
+            if (index >= 0 && index < collection.size()) {
+                return ((List<T>) collection).get(index);
+            } else {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        } else if (type == CollectionType.TREE_SET) {
+            if (index < 0 || index >= collection.size()) {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+
+            // Iterate through the TreeSet to find the element at the specified index
+            Iterator<T> iterator = collection.iterator();
+            int currentIndex = 0;
+            while (iterator.hasNext()) {
+                T element = iterator.next();
+                if (currentIndex == index) {
+                    return element;
+                }
+                currentIndex++;
+            }
+
+            // If the index is out of bounds (should not reach here normally)
+            throw new IndexOutOfBoundsException("Index is out of bounds");
         } else {
-            throw new UnsupportedOperationException("get(int index) is not supported for Set");
+            throw new UnsupportedOperationException("get(int index) is not supported for this collection type");
         }
     }
+
 
     @Override
     public T set(int index, T element) {
@@ -261,10 +284,35 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
      * @param updatedElement The new element to replace the existing element at the index.
      */
     public void customSet(int index, T updatedElement) {
-        if (collection instanceof List) {
-            ((List<T>) collection).set(index, updatedElement);
+        if (type == CollectionType.ARRAY_LIST) {
+            if (index >= 0 && index < collection.size()) {
+                ((List<T>) collection).set(index, updatedElement);
+            } else {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        } else if (type == CollectionType.TREE_SET) {
+            // Create a new TreeSet to hold the updated elements
+            TreeSet<T> newSet = new TreeSet<>();
+            int currentIndex = 0;
+            boolean updated = false;
+
+            for (T element : collection) {
+                if (currentIndex == index) {
+                    newSet.add(updatedElement);
+                    updated = true;
+                } else {
+                    newSet.add(element);
+                }
+                currentIndex++;
+            }
+
+            if (index == currentIndex && !updated) {
+                newSet.add(updatedElement);
+            }
+
+            collection = newSet;
         } else {
-            throw new UnsupportedOperationException("customSet(int index, T updatedElement) is not supported for Set");
+            throw new UnsupportedOperationException("Editing by index is not supported for this collection type");
         }
     }
 
@@ -274,10 +322,33 @@ public class SuperCollection<T> implements List<T>, Set<T>, Serializable {
      * @param index The index of the element to delete.
      */
     public void customDelete(int index) {
-        if (collection instanceof List) {
-            ((List<T>) collection).remove(index);
+        if (type == CollectionType.ARRAY_LIST) {
+            if (index >= 0 && index < collection.size()) {
+                ((List<T>) collection).remove(index);
+            } else {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        } else if (type == CollectionType.TREE_SET) {
+            TreeSet<T> newSet = new TreeSet<>();
+            int currentIndex = 0;
+            boolean removed = false;
+
+            for (T element : collection) {
+                if (currentIndex != index) {
+                    newSet.add(element);
+                } else {
+                    removed = true;
+                }
+                currentIndex++;
+            }
+
+            if (!removed) {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+
+            collection = newSet;
         } else {
-            throw new UnsupportedOperationException("customDelete(int index) is not supported for Set");
+            throw new UnsupportedOperationException("Deleting by index is not supported for this collection type");
         }
     }
 }
