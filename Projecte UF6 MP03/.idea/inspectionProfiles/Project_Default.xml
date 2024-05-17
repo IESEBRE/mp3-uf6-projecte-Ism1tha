@@ -1,0 +1,11 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="AutoCloseableResource" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="METHOD_MATCHER_CONFIG" value="java.util.Formatter,format,java.io.Writer,append,com.google.common.base.Preconditions,checkNotNull,org.hibernate.Session,close,java.io.PrintWriter,printf,java.io.PrintStream,printf,com.insebre.project.controller.DatabaseConnectionController,query,java.lang.Class,getResourceAsStream,java.sql.Connection,prepareCall" />
+    </inspection_tool>
+    <inspection_tool class="SortedCollectionWithNonComparableKeys" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="IGNORE_TYPE_PARAMETERS" value="true" />
+    </inspection_tool>
+  </profile>
+</component>

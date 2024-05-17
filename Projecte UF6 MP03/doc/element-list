@@ -1,0 +1,8 @@
+com.insebre.project
+com.insebre.project.controller
+com.insebre.project.controller.form
+com.insebre.project.exception
+com.insebre.project.exception.dao
+com.insebre.project.model
+com.insebre.project.modeldao
+com.insebre.project.view
